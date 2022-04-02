@@ -1,0 +1,29 @@
+name: kavanest-test-scraper
+
+namespace: kavanest-test
+
+deployment:
+  - name: kavanest-test-scraper
+    image: 192.168.1.61:5000/kavanest-scraper
+    ports:
+    - port: 27017
+    env:
+    - name: MONGO
+      value: mongodb://kavanest-test-mongo:27017
+
+    - name: MQTT
+      value: mqtt://kavanest-test-simulator
+
+service:
+  clusterIP:
+    - name: kavanest-test-scraper
+      selector: kavanest-test-scraper
+      ports:
+        - port: 3100
+
+ingress:
+  - name: test.socket.kavanet.io
+    selector: kavanest-test-scraper
+    path: /
+    port: 3100
+    host: test.socket.kavanet.io
